@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 
 import { EmployeeControlRoutingModule } from './employee-control-routing.module';
 import { EmployeeControlComponent } from './employee-control.component';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [EmployeeControlComponent],
-  imports: [CommonModule, EmployeeControlRoutingModule, FormsModule],
+  imports: [CommonModule, EmployeeControlRoutingModule, ReactiveFormsModule],
 })
 export class EmployeeControlModule {}

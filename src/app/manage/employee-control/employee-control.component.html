@@ -20,7 +20,7 @@
     >
       <div class="relative flex-1">
         <input
-          [(ngModel)]="searchTerm"
+          [formControl]="searchControl"
           class="w-full pl-10 pr-4 py-2 bg-slate-100 focus:border-blue-100 rounded-lg text-sm transition-all"
           placeholder="Busqueda por nombre o ID."
           type="text"
@@ -69,7 +69,10 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-primary/5">
-            @for (employee of getFilteredEmployees(); track $index) {
+            @for (
+              employee of getFilteredEmployees();
+              track trackByEmployeeId($index, employee)
+            ) {
               <tr
                 class="hover:bg-primary/5 transition-colors group border-b border-slate-200"
               >

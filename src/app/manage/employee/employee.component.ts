@@ -1,9 +1,12 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IEmployee } from '@app/Model/employee.model';
 import { DbService } from '@app/manage/services/database.service';
 import { AlertService } from '@app/manage/services/alert.service';
 import { Location } from '@angular/common';
+import { DB_PATHS, ALERT_MESSAGES } from '@app/utils/constants';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-employee',
@@ -11,43 +14,90 @@ import { Location } from '@angular/common';
   templateUrl: './employee.component.html',
   styleUrl: './employee.component.scss',
 })
-export class EmployeeComponent implements OnInit {
+export class EmployeeComponent implements OnInit, OnDestroy {
   private db = inject(DbService);
   private alert = inject(AlertService);
   private location = inject(Location);
   private activatedRoute = inject(ActivatedRoute);
+  private destroy$ = new Subject<void>();
 
-  employee: IEmployee = undefined as any;
+  employee: IEmployee | null = null;
+  isLoading = false;
+
   ngOnInit(): void {
-    const id = this.activatedRoute.snapshot.params['id'];
-    this.loadData(id);
+    this.loadEmployee();
   }
 
-  deleteEmployee() {
-    const id = this.activatedRoute.snapshot.params['id'];
-    this.db.remove(`employees/${id}`).then(() => {
-      this.alert.successBack('Empleado eliminado exitosamente');
-    });
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  deleteAddress(employeeId: any, addressId: string) {
+  private loadEmployee(): void {
+    const id = this.getEmployeeId();
+    if (!id) {
+      this.alert.error('No se encontró el ID del empleado');
+      return;
+    }
+
+    this.isLoading = true;
     this.db
-      .remove(`employees/${employeeId}/addresses/${addressId}`)
-      .then(() => {
-        this.alert.success('Dirección eliminada exitosamente');
-        this.loadData(employeeId);
+      .object<IEmployee>(DB_PATHS.EMPLOYEE_BY_ID(id))
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data) => {
+          this.employee = this.transformAddresses(data);
+          this.isLoading = false;
+        },
+        error: (err) => {
+          this.alert.error(ALERT_MESSAGES.GENERIC_ERROR);
+          this.isLoading = false;
+        },
       });
   }
 
-  loadData(id: string) {
-    this.db.once(`employees/${id}`, (data) => {
-      if (data.addresses) data.addresses = Object.values(data.addresses);
+  deleteEmployee(): void {
+    const id = this.getEmployeeId();
+    if (!id) return;
 
-      this.employee = data;
-    });
+    this.db.remove(DB_PATHS.EMPLOYEE_BY_ID(id)).then(
+      () => {
+        this.alert.successBack(ALERT_MESSAGES.EMPLOYEE_DELETED);
+      },
+      (err) => {
+        this.alert.error(ALERT_MESSAGES.GENERIC_ERROR);
+      },
+    );
   }
 
-  goBack() {
+  deleteAddress(employeeId: string, addressId: string): void {
+    this.db.remove(DB_PATHS.EMPLOYEE_ADDRESS(employeeId, addressId)).then(
+      () => {
+        this.alert.success(ALERT_MESSAGES.ADDRESS_DELETED);
+        this.loadEmployee();
+      },
+      (err) => {
+        this.alert.error(ALERT_MESSAGES.GENERIC_ERROR);
+      },
+    );
+  }
+
+  goBack(): void {
     this.location.back();
+  }
+
+  private getEmployeeId(): string {
+    return this.activatedRoute.snapshot.params['id'] || '';
+  }
+
+  private transformAddresses(employee: IEmployee): IEmployee {
+    if (
+      employee.addresses &&
+      typeof employee.addresses === 'object' &&
+      !Array.isArray(employee.addresses)
+    ) {
+      employee.addresses = Object.values(employee.addresses);
+    }
+    return employee;
   }
 }

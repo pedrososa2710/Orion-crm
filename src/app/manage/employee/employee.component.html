@@ -168,7 +168,7 @@
                       icon: 'warning',
                       cancelButtonText: 'Volver',
                     }"
-                    (deny)="deleteAddress(employee?.id, address.id)"
+                    (deny)="deleteAddress(employee!.id, address.id)"
                     class="p-1.5 text-slate-400 hover:text-red-500 transition-colors"
                   >
                     <span class="material-icons text-sm">Eliminar</span>

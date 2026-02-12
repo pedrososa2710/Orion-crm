@@ -8,20 +8,32 @@ import { Location } from '@angular/common';
 export class AlertService {
   private location = inject(Location);
 
-  success(message: string) {
-    Swal.fire('Éxito', message, 'success');
+  success(message: string): Promise<any> {
+    return Swal.fire('Éxito', message, 'success');
   }
-  successBack(message: string) {
-    Swal.fire('Éxito', message, 'success').then(() => {
+
+  successBack(message: string): Promise<any> {
+    return Swal.fire('Éxito', message, 'success').then(() => {
       this.location.back();
     });
   }
 
-  error(message: string) {
-    Swal.fire('Error', message, 'error');
+  error(message: string): Promise<any> {
+    return Swal.fire('Error', message, 'error');
   }
 
-  info(message: string) {
-    Swal.fire('Información', message, 'info');
+  info(message: string): Promise<any> {
+    return Swal.fire('Información', message, 'info');
+  }
+
+  confirm(title: string, message: string): Promise<boolean> {
+    return Swal.fire({
+      title,
+      text: message,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sí',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => result.isConfirmed);
   }
 }
