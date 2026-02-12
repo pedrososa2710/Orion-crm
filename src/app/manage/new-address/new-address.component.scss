@@ -1,0 +1,16 @@
+input,
+select {
+  background-color: #ffffff;
+  border: 1px solid #dcdcdc;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 14px;
+  width: 100%;
+  outline: none;
+  transition: border 0.2s ease;
+}
+
+input:focus,
+select:focus {
+  border-color: #2563eb; /* azul elegante */
+}
