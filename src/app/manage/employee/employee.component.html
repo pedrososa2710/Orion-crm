@@ -1,0 +1,213 @@
+<main class="max-w-7xl mx-auto px-6 py-8">
+  <nav class="flex mb-8 text-sm font-medium text-slate-500 items-center gap-2">
+    <a
+      class="hover:text-primary transition-colors cursor-pointer"
+      (click)="goBack()"
+      >Empleados</a
+    >
+    <span class="material-icons text-xs">></span>
+    <span class="text-slate-900">{{ employee?.employeeName }}</span>
+  </nav>
+  <div class="flex flex-col lg:flex-row gap-8">
+    <aside class="w-full lg:w-80 flex-shrink-0">
+      <div
+        class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden sticky top-24"
+      >
+        <div class="h-24 bg-gradient-to-r from-primary/20 to-primary/5"></div>
+        <div class="px-6 pb-8">
+          <div class="relative -mt-12 mb-4">
+            <img
+              alt="Avatar de {{ employee?.employeeName }}"
+              class="w-24 h-24 rounded-lg object-cover border border-slate-200"
+              src="https://api.dicebear.com/7.x/avataaars/svg?seed={{
+                employee?.id
+              }}"
+            />
+          </div>
+          <h2 class="text-xl font-bold text-slate-900 mb-1">
+            {{ employee?.employeeName }}
+          </h2>
+          <span
+            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium mb-6"
+            [ngClass]="
+              employee?.status === 'Active'
+                ? 'bg-emerald-100 text-emerald-800'
+                : employee?.status === 'Pending'
+                  ? 'bg-amber-100 text-amber-800'
+                  : 'bg-slate-100 text-slate-600'
+            "
+          >
+            <span
+              class="w-1.5 h-1.5 rounded-full mr-1.5"
+              [ngClass]="
+                employee?.status === 'Active'
+                  ? 'bg-emerald-500'
+                  : employee?.status === 'Pending'
+                    ? 'bg-amber-500'
+                    : 'bg-slate-400'
+              "
+            ></span>
+            {{ employee?.status }}
+          </span>
+          <div class="space-y-4">
+            <div>
+              <p
+                class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1"
+              >
+                ID Empleado
+              </p>
+              <p class="text-sm font-medium text-slate-700">
+                {{ employee?.id }}
+              </p>
+            </div>
+            <div>
+              <p
+                class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1"
+              >
+                Modalidad
+              </p>
+              <p class="text-sm font-medium text-slate-700">
+                {{ employee?.mode }}
+              </p>
+            </div>
+            <div>
+              <p
+                class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1"
+              >
+                Asignado a:
+              </p>
+              <p class="text-sm font-medium text-slate-700">
+                {{ employee?.assignedTo }}
+              </p>
+            </div>
+            <div>
+              <p
+                class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1"
+              >
+                Teléfono
+              </p>
+              <p class="text-sm font-medium text-slate-700">
+                {{ employee?.phone }}
+              </p>
+            </div>
+            <div>
+              <p
+                class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1"
+              >
+                Email
+              </p>
+              <p class="text-sm font-medium text-slate-700">
+                {{ employee?.email }}
+              </p>
+            </div>
+          </div>
+          <div class="mt-8 pt-6 border-t border-slate-100">
+            <button
+              [routerLink]="['/new-employee', employee?.id]"
+              class="w-full flex items-center justify-center gap-2 px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors"
+            >
+              Editar empleado
+            </button>
+            <button
+              [swal]="{
+                title: 'Eliminar empleado?',
+                text: 'Esta acción no se puede deshacer.',
+                showCancelButton: true,
+                showDenyButton: true,
+                showConfirmButton: false,
+                denyButtonText: 'Sí, eliminar',
+                icon: 'warning',
+                cancelButtonText: 'Volver',
+              }"
+              (deny)="deleteEmployee()"
+              class="mt-2 w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-600 text-white border border-slate-200 rounded-lg text-sm font-medium hover:bg-red-500 transition-colors"
+            >
+              Eliminar empleado
+            </button>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <section class="flex-grow">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h3 class="text-2xl font-bold text-slate-900">
+            Control de Direcciones
+          </h3>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        @for (address of employee?.addresses; track $index) {
+          <div
+            class="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col overflow-hidden group"
+          >
+            <div class="p-6 flex-grow">
+              <div class="flex justify-between items-start mb-4">
+                <span
+                  class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-blue-700"
+                >
+                  {{ address.type }}
+                </span>
+                <div
+                  class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <button
+                    [routerLink]="['/new-address', employee?.id, address.id]"
+                    class="p-1.5 text-slate-400 hover:text-primary transition-colors"
+                  >
+                    <span class="material-icons text-sm">Editar</span>
+                  </button>
+                  <button
+                    [swal]="{
+                      title: 'Eliminar Dirección?',
+                      text: 'Esta acción no se puede deshacer.',
+                      showCancelButton: true,
+                      showDenyButton: true,
+                      showConfirmButton: false,
+                      denyButtonText: 'Sí, eliminar',
+                      icon: 'warning',
+                      cancelButtonText: 'Volver',
+                    }"
+                    (deny)="deleteAddress(employee!.id, address.id)"
+                    class="p-1.5 text-slate-400 hover:text-red-500 transition-colors"
+                  >
+                    <span class="material-icons text-sm">Eliminar</span>
+                  </button>
+                </div>
+              </div>
+              <div class="flex gap-4">
+                <div class="flex-grow">
+                  <p
+                    class="text-base font-semibold text-slate-800 leading-tight"
+                  >
+                    {{ address.street }} #{{ address.number }}
+                  </p>
+                  <p class="text-sm text-slate-500 mt-1">
+                    {{ address.paraje }}, {{ address.pueblo }}
+                  </p>
+                  <p class="text-sm text-slate-500">{{ address.province }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+        <button
+          [routerLink]="['/new-address', employee?.id]"
+          class="group flex flex-col items-center justify-center gap-4 rounded-xl border-2 border-dashed border-slate-200 p-8 hover:border-primary hover:bg-primary/5 transition-all"
+        >
+          <div
+            class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-primary/20 group-hover:text-primary transition-colors"
+          >
+            <span class="material-icons">+</span>
+          </div>
+          <div class="text-center">
+            <p class="font-semibold text-slate-900">Nueva dirección</p>
+            <p class="text-xs text-slate-500 mt-1">
+              Configure una nueva dirección.
+            </p>
+          </div>
+        </button>
+      </div>
+    </section>
+  </div>
+</main>

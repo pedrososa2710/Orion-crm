@@ -1,0 +1,128 @@
+<main class="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+  <div class="mb-8">
+    <h2 class="text-3xl font-bold text-slate-900">Crear nueva dirección</h2>
+  </div>
+
+  <div
+    class="bg-white rounded-xl shadow-xl shadow-slate-200/50 border border-slate-200 overflow-hidden mb-8"
+  >
+    <div class="p-8">
+      <div
+        class="grid grid-cols-1 md:grid-cols-6 gap-6"
+        [formGroup]="addressForm"
+      >
+        <div class="col-span-1 md:col-span-3">
+          <label
+            class="block text-sm font-semibold text-slate-800 mb-2"
+            for="address-1"
+            >Calle</label
+          >
+          <input
+            class="block w-full px-3 py-3 border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-primary focus:border-primary sm:text-sm transition-all outline-none"
+            id="address-1"
+            formControlName="street"
+            placeholder="Nombre de la calle"
+            type="text"
+          />
+        </div>
+        <div class="col-span-1 md:col-span-1">
+          <label
+            class="block text-sm font-semibold text-slate-800 mb-2"
+            for="address-2"
+            >Número</label
+          >
+          <input
+            class="block w-full px-3 py-3 border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-primary focus:border-primary sm:text-sm transition-all outline-none"
+            id="address-2"
+            formControlName="number"
+            placeholder="Número"
+            type="text"
+          />
+        </div>
+        <div class="col-span-1 md:col-span-2">
+          <label
+            class="block text-sm font-semibold text-slate-800 mb-2"
+            for="address-type"
+            >Tipo de dirección</label
+          >
+          <select
+            formControlName="type"
+            class="block w-full px-3 py-3 border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-primary focus:border-primary sm:text-sm transition-all outline-none"
+            id="address-type"
+          >
+            <option value="">Seleccione una opción</option>
+            <option value="Casa">Casa</option>
+            <option value="Oficina">Oficina</option>
+            <option value="Emergencia">Emergencia</option>
+          </select>
+        </div>
+        <div class="col-span-1 md:col-span-2">
+          <label
+            class="block text-sm font-semibold text-slate-800 mb-2"
+            for="paraje"
+            >Paraje</label
+          >
+          <input
+            class="block w-full px-3 py-3 border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-primary focus:border-primary sm:text-sm transition-all outline-none"
+            id="paraje"
+            formControlName="paraje"
+            placeholder="Piantini"
+            type="text"
+          />
+        </div>
+        <div class="col-span-1 md:col-span-2">
+          <label
+            class="block text-sm font-semibold text-slate-800 mb-2"
+            for="Pueblo"
+            >Pueblo</label
+          >
+          <input
+            class="block w-full px-3 py-3 border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-primary focus:border-primary sm:text-sm transition-all outline-none"
+            id="Pueblo"
+            formControlName="pueblo"
+            placeholder="Distrito Nacional"
+            type="text"
+          />
+        </div>
+        <div class="col-span-1 md:col-span-2">
+          <label
+            class="block text-sm font-semibold text-slate-800 mb-2"
+            for="provincia"
+            >Provincia</label
+          >
+          <input
+            class="block w-full px-3 py-3 border-slate-200 bg-white text-slate-900 rounded-lg focus:ring-primary focus:border-primary sm:text-sm transition-all outline-none"
+            id="provincia"
+            formControlName="province"
+            placeholder="Santo Domingo"
+            type="text"
+          />
+        </div>
+      </div>
+      <div
+        class="py-8 flex items-center justify-between border-t border-slate-100"
+      >
+        <div>
+          <button
+            class="text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors flex items-center gap-2"
+            type="button"
+            (click)="goBack()"
+          >
+            Cancelar
+          </button>
+        </div>
+        <div>
+          <div class="flex items-center gap-4">
+            <button
+              (click)="saveAddress()"
+              class="inline-flex items-center px-6 py-3 border-2 bg-blue-600 text-sm font-bold rounded-lg text-white hover:bg-blue-700 focus:outline-none transition-all"
+              type="button"
+            >
+              Guardar Dirección
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
